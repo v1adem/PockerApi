@@ -8,17 +8,16 @@ public class GameService
 {
     private readonly IMongoCollection<Game> _gameCollection;
 
-    public GameService(
-        IOptions<PockerDBSettings> PockerDbSettings)
+    public GameService()
     {
         var mongoClient = new MongoClient(
-            PockerDbSettings.Value.ConnectionString);
+            Environment.GetEnvironmentVariable("MONGODB_API"));
 
         var mongoDatabase = mongoClient.GetDatabase(
-            PockerDbSettings.Value.DatabaseName);
+            "PockerDB");
 
         _gameCollection = mongoDatabase.GetCollection<Game>(
-            PockerDbSettings.Value.GameCollectionName);
+            "Game");
     }
 
     public async Task<List<Game>> GetAsync() =>

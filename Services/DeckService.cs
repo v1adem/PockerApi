@@ -8,17 +8,16 @@ public class DeckService
 {
     private readonly IMongoCollection<Deck> _deckCollection;
 
-    public DeckService(
-        IOptions<PockerDBSettings> PockerDbSettings)
+    public DeckService()
     {
         var mongoClient = new MongoClient(
-            PockerDbSettings.Value.ConnectionString);
+            Environment.GetEnvironmentVariable("MONGODB_API"));
 
         var mongoDatabase = mongoClient.GetDatabase(
-            PockerDbSettings.Value.DatabaseName);
+            "PockerDB");
 
         _deckCollection = mongoDatabase.GetCollection<Deck>(
-            PockerDbSettings.Value.DeckCollectionName);
+            "Deck");
     }
 
     public async Task<List<Deck>> GetAsync() =>

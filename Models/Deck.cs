@@ -9,7 +9,6 @@ namespace PockerApi.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         public List<Card> Cards { get; set; } = new List<Card>();
-        private int _currentCard = 0;
         public Deck()
         {
             string[] suits = { "hearts", "diamonds", "clubs", "spades" };
