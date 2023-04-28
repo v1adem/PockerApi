@@ -10,6 +10,7 @@ namespace PockerApi.Models
         public string? Id { get; set; }
         public int? Money { get; set; }
         public int? Bet { get; set; } = null!;
-        public int? Score { get; set; } = null!;
+
+        public List<Card> Cards { get; set; } = new List<Card>();
     }
 }

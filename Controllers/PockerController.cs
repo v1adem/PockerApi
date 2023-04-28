@@ -20,8 +20,21 @@ public class PockerController : ControllerBase
     [HttpGet]
     public async Task<Game> StartGame()
     {
-        var newGame = new Game() { Money = 100_000, Score = 0, Bet = 0 };
+        var newGame = new Game() { Money = 100_000, Bet = 0 };
+        
+        var newDeck = new Deck()
+        {
+            Id = newGame.Id
+        };
+        newDeck.ShuffleDeck();
+        newGame.Cards.Add(newDeck.NextCard());
+        newGame.Cards.Add(newDeck.NextCard());
+        newGame.Cards.Add(newDeck.NextCard());
+        newGame.Cards.Add(newDeck.NextCard());
+        newGame.Cards.Add(newDeck.NextCard());
+
         await _gameService.CreateAsync(newGame);
+        await _deckService.CreateAsync(newDeck);
 
         return newGame;
     }

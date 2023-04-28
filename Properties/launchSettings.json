@@ -3,7 +3,6 @@
     "PockerApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGODB_API": "mongodb+srv://v1adem:PjRiN5DqPdyWxYIJ@pockercluster.v5zuyzd.mongodb.net/?retryWrites=true&w=majority"

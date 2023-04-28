@@ -4,10 +4,6 @@ using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<PockerDBSettings>(
-    builder.Configuration.GetSection("PockerDB"));
-
-
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<DeckService>();
 

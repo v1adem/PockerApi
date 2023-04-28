@@ -25,5 +25,13 @@ namespace PockerApi.Models
                 (Cards[i], Cards[j]) = (Cards[j], Cards[i]);
             }
         }
+
+        public Card NextCard()
+        {
+            var card = Cards.First();
+            Cards.Remove(card);
+
+            return card;
+        }
     }
 }
