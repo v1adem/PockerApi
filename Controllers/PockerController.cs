@@ -22,7 +22,8 @@ public class PockerController : ControllerBase
     public async Task<Game> StartGame()
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
-        
+        await _gameService.CreateAsync(newGame);
+
         var newDeck = new Deck()
         {
             Id = newGame.Id
@@ -34,7 +35,8 @@ public class PockerController : ControllerBase
         newGame.Cards.Add(newDeck.NextCard());
         newGame.Cards.Add(newDeck.NextCard());
 
-        await _gameService.CreateAsync(newGame);
+        await _gameService.UpdateAsync(newGame.Id, newGame);
+
         await _deckService.CreateAsync(newDeck);
 
         return newGame;
@@ -58,7 +60,7 @@ public class PockerController : ControllerBase
         // Change unblock cards
         for (int i = 0; i < 5; i++)
         {
-            if (game.Cards[i].IsBlocked)
+            if (!game.Cards[i].IsBlocked)
             {
                 game.Cards[i] = deck.NextCard();
             } 
