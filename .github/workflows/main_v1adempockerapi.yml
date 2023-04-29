@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'V1ademPockerApi'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7071A15466A94FA48F3AB660D4604A68 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_55B87A1D655649AF9CD36C5CF8C882AB }}
           package: .
