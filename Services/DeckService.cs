@@ -8,6 +8,7 @@ public class DeckService
 {
     private readonly IMongoCollection<Deck> _deckCollection;
 
+    //Connecting to Deck table
     public DeckService()
     {
         var mongoClient = new MongoClient(

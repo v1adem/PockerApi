@@ -82,6 +82,7 @@ public class PockerController : ControllerBase
             return NotFound();
         }
 
+        //Creating new Deck
         var newDeck = new Deck()
         {
             Id = game.Id
@@ -92,6 +93,7 @@ public class PockerController : ControllerBase
             game.Cards[i] = newDeck.NextCard();
         }
 
+        //Updating current game properties
         await _gameService.UpdateAsync(game.Id, game);
         await _deckService.UpdateAsync(id, newDeck);
 

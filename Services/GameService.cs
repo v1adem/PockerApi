@@ -8,6 +8,7 @@ public class GameService
 {
     private readonly IMongoCollection<Game> _gameCollection;
 
+    //Connecting to Game table
     public GameService()
     {
         var mongoClient = new MongoClient(
