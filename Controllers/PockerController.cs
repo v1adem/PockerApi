@@ -43,7 +43,7 @@ public class PockerController : ControllerBase
     }
 
     [HttpGet("{id:length(24)}/next")]
-    public async Task<ActionResult<Card>> Next(string id)
+    public async Task<ActionResult<Game>> Next(string id)
     {
         var deck = await _deckService.GetAsync(id);
         if (deck == null)
@@ -69,6 +69,31 @@ public class PockerController : ControllerBase
         // Checking combinations
         game.Money = game.CheckCombinations() * game.Bet;
         game.Bet = 0;
+
+        return Ok(game);
+    }
+
+    [HttpGet("{id:length(24)}/continue")]
+    public async Task<ActionResult<Game>> Continue(string id)
+    {
+        var game = await _gameService.GetAsync(id);
+        if (game == null) 
+        { 
+            return NotFound();
+        }
+
+        var newDeck = new Deck()
+        {
+            Id = game.Id
+        };
+        newDeck.ShuffleDeck();
+        for(int i = 0; i < 5; i++)
+        {
+            game.Cards[i] = newDeck.NextCard();
+        }
+
+        await _gameService.UpdateAsync(game.Id, game);
+        await _deckService.UpdateAsync(id, newDeck);
 
         return Ok(game);
     }

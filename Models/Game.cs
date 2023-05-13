@@ -90,7 +90,7 @@ namespace PockerApi.Models
                 }
             }
 
-            // No combinatio
+            // No combination
             return multiplier;
         }
     }
