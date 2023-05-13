@@ -19,7 +19,7 @@ public class PockerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<Game> StartGame()
+    public async Task<ActionResult<Game>> StartGame()
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
         await _gameService.CreateAsync(newGame);
@@ -39,7 +39,7 @@ public class PockerController : ControllerBase
 
         await _deckService.CreateAsync(newDeck);
 
-        return newGame;
+        return Ok(newGame);
     }
 
     [HttpGet("{id:length(24)}/next")]
