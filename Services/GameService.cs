@@ -35,4 +35,7 @@ public class GameService
 
     public async Task RemoveAsync(string id) =>
         await _gameCollection.DeleteOneAsync(x => x.Id == id);
+
+    public async Task RemoveAllAsync() =>
+        await _gameCollection.RemoveAllAsync();
 }

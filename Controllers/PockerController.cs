@@ -2,6 +2,7 @@ using Amazon.Runtime;
 using Microsoft.AspNetCore.Mvc;
 using PockerApi.Models;
 using PockerApi.Services;
+//using Newtonsoft.Json;
 
 namespace BlackJackApi.Controllers;
 
@@ -22,12 +23,20 @@ public class PockerController : ControllerBase
     public async Task<ActionResult<Game>> StartGame()
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
-        await _gameService.CreateAsync(newGame);
-
         var newDeck = new Deck()
+
+        try
+        {
+            await _gameService.CreateAsync(newGame);
+        }
+        catch
+        {
+            return BadRequest("Error creating object");
+        }
         {
             Id = newGame.Id
         };
+
         newDeck.ShuffleDeck();
         newGame.Cards.Add(newDeck.NextCard());
         newGame.Cards.Add(newDeck.NextCard());
@@ -35,35 +44,47 @@ public class PockerController : ControllerBase
         newGame.Cards.Add(newDeck.NextCard());
         newGame.Cards.Add(newDeck.NextCard());
 
-        await _gameService.UpdateAsync(newGame.Id, newGame);
+        try
+        {
+            await _gameService.UpdateAsync(newGame.Id, newGame);
+        }
+        catch 
+        {
+            return BadRequest("Error updating object")
+        }
 
-        await _deckService.CreateAsync(newDeck);
+        try
+        {
+            await _deckService.CreateAsync(newDeck);
+        }
+        catch
+        {
+            return BadRequest("Error creating object");
+        }
 
         return Ok(newGame);
     }
 
-    [HttpGet("{id:length(24)}/next")]
+    [HttpGet("/next")]
     public async Task<ActionResult<Game>> Next(string id)
     {
-        var deck = await _deckService.GetAsync(id);
-        if (deck == null)
+        try
+        {
+            var deck = await _deckService.GetAsync(id);
+            var game = await _gameService.GetAsync(id);
+        }
+        catch
         {
             return NotFound();
         }
-
-        var game = await _gameService.GetAsync(id);
-        if (game == null)
-        {
-            return NotFound();
-        }
-
+        
         // Change unblock cards
         for (int i = 0; i < 5; i++)
         {
             if (!game.Cards[i].IsBlocked)
             {
                 game.Cards[i] = deck.NextCard();
-            } 
+            }
         }
 
         // Checking combinations
@@ -73,31 +94,64 @@ public class PockerController : ControllerBase
         return Ok(game);
     }
 
-    [HttpGet("{id:length(24)}/continue")]
-    public async Task<ActionResult<Game>> Continue(string id)
+    [HttpGet("/continue")]
+    public async Task<ActionResult<Game>> Continue(Game jsonGame)
     {
-        var game = await _gameService.GetAsync(id);
-        if (game == null) 
-        { 
-            return NotFound();
+        try
+        {
+            var game = jsonGame;
         }
-
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message); 
+        }
+        
         //Creating new Deck
         var newDeck = new Deck()
         {
             Id = game.Id
         };
         newDeck.ShuffleDeck();
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             game.Cards[i] = newDeck.NextCard();
         }
 
         //Updating current game properties
-        await _gameService.UpdateAsync(game.Id, game);
-        await _deckService.UpdateAsync(id, newDeck);
+        try
+        {
+            await _gameService.UpdateAsync(game.Id, game);
+            await _deckService.UpdateAsync(id, newDeck);
+        }
+        catch () 
+        {
+            return BadRequest("Error updating object");
+        }
+        
 
         return Ok(game);
+    }
+
+    [HttpDelete]
+    {
+    public async Task<ActionResult> Continue(string key)
+    {
+        if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
+        {
+            return BadRequest("Wrong delete password");
+        }
+
+        try
+        {
+            await _gameService.RemoveAllAsync();
+            await _deckService.RemoveAllAsync();
+        }
+        catch(Exception ex)
+        { 
+            return BadRequest(ex.Message);
+        }
+        
+        return Ok();
     }
 }
 
