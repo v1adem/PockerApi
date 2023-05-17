@@ -23,7 +23,7 @@ public class PockerController : ControllerBase
     public async Task<ActionResult<Game>> StartGame()
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
-        var newDeck = new Deck()
+        var newDeck = new Deck();
 
         try
         {
@@ -33,9 +33,6 @@ public class PockerController : ControllerBase
         {
             return BadRequest("Error creating object");
         }
-        {
-            Id = newGame.Id
-        };
 
         newDeck.ShuffleDeck();
         newGame.Cards.Add(newDeck.NextCard());
@@ -50,7 +47,7 @@ public class PockerController : ControllerBase
         }
         catch 
         {
-            return BadRequest("Error updating object")
+            return BadRequest("Error updating object");
         }
 
         try
@@ -68,10 +65,12 @@ public class PockerController : ControllerBase
     [HttpGet("/next")]
     public async Task<ActionResult<Game>> Next(string id)
     {
+        Game game;
+        Deck deck;
         try
         {
-            var deck = await _deckService.GetAsync(id);
-            var game = await _gameService.GetAsync(id);
+            deck = await _deckService.GetAsync(id);
+            game = await _gameService.GetAsync(id);
         }
         catch
         {
@@ -97,9 +96,10 @@ public class PockerController : ControllerBase
     [HttpGet("/continue")]
     public async Task<ActionResult<Game>> Continue(Game jsonGame)
     {
+        Game game;
         try
         {
-            var game = jsonGame;
+            game = jsonGame;
         }
         catch (Exception ex)
         {
@@ -121,9 +121,9 @@ public class PockerController : ControllerBase
         try
         {
             await _gameService.UpdateAsync(game.Id, game);
-            await _deckService.UpdateAsync(id, newDeck);
+            await _deckService.UpdateAsync(newDeck.Id, newDeck);
         }
-        catch () 
+        catch 
         {
             return BadRequest("Error updating object");
         }
@@ -133,7 +133,6 @@ public class PockerController : ControllerBase
     }
 
     [HttpDelete]
-    {
     public async Task<ActionResult> Continue(string key)
     {
         if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
