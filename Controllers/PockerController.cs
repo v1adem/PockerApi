@@ -63,9 +63,11 @@ public class PockerController : ControllerBase
         }
 
         // Checking combinations
-        game.Money = game.CheckCombinations() * game.Bet;
-        game.Bet = 0;
-
+        if (!(game.Bet == 0)) {
+            game.Money += game.CheckCombinations() * game.Bet;
+            game.Bet = 0;
+        }
+        
         return Ok(game);
     }
 

@@ -15,7 +15,6 @@ namespace PockerApi.Models
 
         public float CheckCombinations()
         {
-            float multiplier = 0;
 
             List<int> ranks = new List<int>();
             List<int> suits = new List<int>();
@@ -32,21 +31,21 @@ namespace PockerApi.Models
                 // Flush Royal
                 if ((ranks.Contains(14)) && (ranks.Contains(13)) && (ranks.Contains(12)) && (ranks.Contains(11)) && (ranks.Contains(10)))
                 {
-                    return multiplier = 100;
+                    return 100;
                 }
                 // Stright Flush
                 if ((ranks.Contains(minRank + 1)) && (ranks.Contains(minRank + 2)) && (ranks.Contains(minRank + 3)) && (ranks.Contains(minRank + 4)))
                 { 
-                    return multiplier = 10; 
+                    return 10; 
                 }
 
-                return multiplier = 1.75f;
+                return 1.75f;
             }
 
             //Straight
             if ((ranks.Contains(minRank + 1)) && (ranks.Contains(minRank + 2)) && (ranks.Contains(minRank + 3)) && (ranks.Contains(minRank + 4)))
             {
-                return multiplier = 1.75f;
+                return 1.75f;
             }
 
             //Kare
@@ -55,7 +54,7 @@ namespace PockerApi.Models
             {
                 if((ranks[i] == ranks[i+1]) && (ranks[i+1] == ranks[i + 2]) && (ranks[i + 2] == ranks[i + 3])) 
                 {
-                    return multiplier = 4;
+                    return 4;
                 }
             }
 
@@ -69,15 +68,15 @@ namespace PockerApi.Models
                     {
                         if ((ranks[j] == ranks[j + 1]) && (ranks[j + 1] == ranks[j + 2]))
                         {
-                             return multiplier = 2;
+                             return 2;
                         }
                     }
                     // Two pairs
                     if ((ranks[i + 2] == ranks[i + 3]) || (ranks[i + 3] == ranks[i + 4]))
                     {
-                        return multiplier = 1.4f;
+                        return 1.4f;
                     }
-                    return multiplier = 1.25f;
+                    return 1.25f;
                 }
             }
 
@@ -86,12 +85,12 @@ namespace PockerApi.Models
             {
                 if ((ranks[i] == ranks[i + 1]) && (ranks[i + 1] == ranks[i + 2]))
                 {
-                    return multiplier = 1.5f;
+                    return 1.5f;
                 }
             }
 
             // No combination
-            return multiplier;
+            return 0;
         }
     }
 }
