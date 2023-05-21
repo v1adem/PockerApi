@@ -24,44 +24,22 @@ public class PockerController : ControllerBase
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
 
-        try
-        {
-            await _gameService.CreateAsync(newGame);
-        }
-        catch
+        await _gameService.CreateAsync(newGame);
+        if (newGame == null)
         {
             return BadRequest("Error creating object");
         }
-
+   
         var newDeck = new Deck()
         {
             Id = newGame.Id
         };
 
         newDeck.ShuffleDeck();
-        newGame.Cards.Add(newDeck.NextCard());
-        newGame.Cards.Add(newDeck.NextCard());
-        newGame.Cards.Add(newDeck.NextCard());
-        newGame.Cards.Add(newDeck.NextCard());
-        newGame.Cards.Add(newDeck.NextCard());
-
-        try
-        {
-            await _gameService.UpdateAsync(newGame.Id, newGame);
-        }
-        catch 
-        {
-            return BadRequest("Error updating object");
-        }
-
-        try
-        {
-            await _deckService.CreateAsync(newDeck);
-        }
-        catch
-        {
-            return BadRequest("Error creating object");
-        }
+        for (int i = 0; i < 5; i++) newGame.Cards.Add(newDeck.NextCard());
+       
+        await _gameService.UpdateAsync(newGame.Id, newGame);
+        await _deckService.CreateAsync(newDeck);
 
         return Ok(newGame);
     }
@@ -69,16 +47,12 @@ public class PockerController : ControllerBase
     [HttpGet("/next")]
     public async Task<ActionResult<Game>> Next(Game game)
     {
-        Deck deck;
-        try
-        {
-            deck = await _deckService.GetAsync(game.Id);
-        }
-        catch
+        var deck = await _deckService.GetAsync(game.Id);
+        if (deck == null)
         {
             return NotFound();
         }
-        
+
         // Change unblock cards
         for (int i = 0; i < 5; i++)
         {
@@ -98,33 +72,24 @@ public class PockerController : ControllerBase
     [HttpGet("/continue")]
     public async Task<ActionResult<Game>> Continue(Game game)
     {
-        //Creating new Deck
         var newDeck = new Deck()
         {
             Id = game.Id
         };
         newDeck.ShuffleDeck();
+
         for (int i = 0; i < 5; i++)
         {
             game.Cards[i] = newDeck.NextCard();
         }
 
-        //Updating current game properties
-        try
-        {
-            await _gameService.UpdateAsync(game.Id, game);
-            await _deckService.UpdateAsync(newDeck.Id, newDeck);
-        }
-        catch 
-        {
-            return BadRequest("Error updating object");
-        }
+        await _gameService.UpdateAsync(game.Id, game);
+        await _deckService.UpdateAsync(newDeck.Id, newDeck);
         
-
         return Ok(game);
     }
 
-    [HttpDelete]
+    [HttpDelete("/del")]
     public async Task<ActionResult> Wipe(string key)
     {
         if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
@@ -132,15 +97,9 @@ public class PockerController : ControllerBase
             return BadRequest("Wrong delete password");
         }
 
-        try
-        {
-            await _gameService.RemoveAllAsync();
-            await _deckService.RemoveAllAsync();
-        }
-        catch(Exception ex)
-        { 
-            return BadRequest(ex.Message);
-        }
+        //Wiping DB
+        await _gameService.RemoveAllAsync();
+        await _deckService.RemoveAllAsync();
         
         return Ok();
     }
