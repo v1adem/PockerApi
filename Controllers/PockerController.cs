@@ -91,7 +91,7 @@ public class PockerController : ControllerBase
         return Ok(game);
     }
 
-    [HttpPost("del")]
+    [HttpPost("{key}/del")]
     public async Task<ActionResult> Wipe(string key)
     {
         if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
