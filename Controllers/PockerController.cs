@@ -44,7 +44,7 @@ public class PockerController : ControllerBase
         return Ok(newGame);
     }
 
-    [HttpGet("/next")]
+    [HttpPost("/next")]
     public async Task<ActionResult<Game>> Next(Game game)
     {
         var deck = await _deckService.GetAsync(game.Id);
@@ -69,7 +69,7 @@ public class PockerController : ControllerBase
         return Ok(game);
     }
 
-    [HttpGet("/continue")]
+    [HttpPost("/continue")]
     public async Task<ActionResult<Game>> Continue(Game game)
     {
         var newDeck = new Deck()
@@ -89,7 +89,7 @@ public class PockerController : ControllerBase
         return Ok(game);
     }
 
-    [HttpDelete("/del")]
+    [HttpPost("/del")]
     public async Task<ActionResult> Wipe(string key)
     {
         if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
