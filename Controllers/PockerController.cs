@@ -23,7 +23,6 @@ public class PockerController : ControllerBase
     public async Task<ActionResult<Game>> StartGame()
     {
         var newGame = new Game() { Money = 100_000, Bet = 0 };
-        var newDeck = new Deck();
 
         try
         {
@@ -33,6 +32,11 @@ public class PockerController : ControllerBase
         {
             return BadRequest("Error creating object");
         }
+
+        var newDeck = new Deck()
+        {
+            Id = newGame.Id
+        };
 
         newDeck.ShuffleDeck();
         newGame.Cards.Add(newDeck.NextCard());
@@ -63,14 +67,12 @@ public class PockerController : ControllerBase
     }
 
     [HttpGet("/next")]
-    public async Task<ActionResult<Game>> Next(string id)
+    public async Task<ActionResult<Game>> Next(Game game)
     {
-        Game game;
         Deck deck;
         try
         {
-            deck = await _deckService.GetAsync(id);
-            game = await _gameService.GetAsync(id);
+            deck = await _deckService.GetAsync(game.Id);
         }
         catch
         {
@@ -94,18 +96,8 @@ public class PockerController : ControllerBase
     }
 
     [HttpGet("/continue")]
-    public async Task<ActionResult<Game>> Continue(Game jsonGame)
+    public async Task<ActionResult<Game>> Continue(Game game)
     {
-        Game game;
-        try
-        {
-            game = jsonGame;
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message); 
-        }
-        
         //Creating new Deck
         var newDeck = new Deck()
         {
@@ -133,7 +125,7 @@ public class PockerController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<ActionResult> Continue(string key)
+    public async Task<ActionResult> Wipe(string key)
     {
         if (key != Environment.GetEnvironmentVariable("DELETE_KEY"))
         {

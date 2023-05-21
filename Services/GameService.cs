@@ -36,7 +36,6 @@ public class GameService
     public async Task RemoveAsync(string id) =>
         await _gameCollection.DeleteOneAsync(x => x.Id == id);
 
-    //The same situation like in DeckServices
     public async Task RemoveAllAsync() =>
         await _gameCollection.DeleteManyAsync(_ => true);
 }
