@@ -93,6 +93,8 @@ namespace PockerApi.Models
                 }
             }
 
+            if (ranks[3] == ranks[4]) return 1.25f;
+
             // No combination
             return 0;
         }
