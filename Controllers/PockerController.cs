@@ -22,7 +22,7 @@ public class PockerController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<Game>> StartGame()
     {
-        var newGame = new Game() { Money = 100_000, Bet = 0 };
+        var newGame = new Game() { Money = 1000, Bet = 0 };
 
         await _gameService.CreateAsync(newGame);
         if (newGame == null)
@@ -64,8 +64,8 @@ public class PockerController : ControllerBase
 
         // Checking combinations
         if (!(game.Bet == 0)) {
-            //game.Money += game.CheckCombinations() * game.Bet;
-            //game.Bet = 0;
+            game.Money += game.CheckCombinations() * game.Bet;
+            game.Bet = 0;
         }
         
         return Ok(game);

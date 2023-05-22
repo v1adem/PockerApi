@@ -59,7 +59,7 @@ namespace PockerApi.Models
             }
 
             //Two
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 3; i++)
             {
                 if ((ranks[i] == ranks[i + 1]) && (ranks[i + 1] != ranks[i + 2]))
                 {
@@ -72,7 +72,7 @@ namespace PockerApi.Models
                         }
                     }
                     // Two pairs
-                    if ((ranks[i + 2] == ranks[i + 3]) || (ranks[i + 3] == ranks[i + 4]))
+                    if (ranks[i + 2] == ranks[i + 3])
                     {
                         return 1.4f;
                     }
