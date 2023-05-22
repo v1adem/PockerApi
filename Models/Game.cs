@@ -72,7 +72,11 @@ namespace PockerApi.Models
                         }
                     }
                     // Two pairs
-                    if (ranks[i + 2] == ranks[i + 3])
+                    if (i <= 1 && (ranks[i + 2] == ranks[i + 3]))
+                    {
+                        return 1.4f;
+                    }
+                    if ((ranks[0] == ranks[1]) && (ranks[3] == ranks[4]))
                     {
                         return 1.4f;
                     }
