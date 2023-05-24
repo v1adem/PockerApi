@@ -64,6 +64,15 @@ namespace PockerApi.Models
                  return 2;
             }
 
+            //Three
+            for (int i = 0; i < 3; i++)
+            {
+                if ((ranks[i] == ranks[i + 1]) && (ranks[i + 1] == ranks[i + 2]))
+                {
+                    return 1.5f;
+                }
+            }
+
             //Two
             for (int i = 0; i < 3; i++)
             {
@@ -79,15 +88,6 @@ namespace PockerApi.Models
                         return 1.4f;
                     }
                     return 1.25f;
-                }
-            }
-
-            //Three
-            for (int i = 0; i < 3; i++)
-            {
-                if ((ranks[i] == ranks[i + 1]) && (ranks[i + 1] == ranks[i + 2]))
-                {
-                    return 1.5f;
                 }
             }
 
