@@ -58,19 +58,17 @@ namespace PockerApi.Models
                 }
             }
 
+            // Full house
+            if ((ranks[0] == ranks[1]) && (ranks[1] == ranks[2]) && (ranks[3] == ranks[4]) || (ranks[2] == ranks[3]) && (ranks[3] == ranks[4]) && (ranks[0] == ranks[1]))
+            {
+                 return 2;
+            }
+
             //Two
             for (int i = 0; i < 3; i++)
             {
                 if ((ranks[i] == ranks[i + 1]) && (ranks[i + 1] != ranks[i + 2]))
                 {
-                    // Full house
-                    for (int j = 0; j < 3; j++)
-                    {
-                        if ((ranks[j] == ranks[j + 1]) && (ranks[j + 1] == ranks[j + 2]))
-                        {
-                             return 2;
-                        }
-                    }
                     // Two pairs
                     if (i <= 1 && (ranks[i + 2] == ranks[i + 3]))
                     {
