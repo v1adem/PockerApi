@@ -6,11 +6,6 @@ namespace PockerApi.UnitTests
     [TestFixture]
     public class GameTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public void CheckCombinationsTest_CombinationFlush()
         {
@@ -275,7 +270,18 @@ namespace PockerApi.UnitTests
         [Test]
         public void CheckCombinationsTest_CombinationNone()
         {
-            Assert.Ignore();
+            Game game = new Game();
+            game.Bet = 1;
+            game.Cards = new List<Card>
+            {
+                new Card(1, 10),
+                new Card(2, 11),
+                new Card(3, 1),
+                new Card(4, 2),
+                new Card(1, 12)
+            };
+
+            Assert.AreEqual(0, game.CheckCombinations());
         }
     }
 }

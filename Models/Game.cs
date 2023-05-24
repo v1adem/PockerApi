@@ -15,7 +15,6 @@ namespace PockerApi.Models
 
         public float CheckCombinations()
         {
-
             List<int> ranks = new List<int>();
             List<int> suits = new List<int>();
             foreach (Card card in Cards)
